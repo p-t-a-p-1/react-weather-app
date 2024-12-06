@@ -1,36 +1,48 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [city, setCity] = useState('')
+  const [weather, setWeather] = useState(null)
+
+  const handleSearch = () => {
+    // Fetch weather data from API
+    // This is a placeholder, replace with actual API call
+    setWeather({
+      temperature: '25°C',
+      condition: 'Sunny',
+      humidity: '60%',
+      windSpeed: '10 km/h'
+    })
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <div className="container mx-auto p-4">
+      <header className="bg-blue-500 text-white p-4">
+        <h1 className="text-2xl">Weather App</h1>
+      </header>
+      <div className="my-4">
+        <input
+          type="text"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          placeholder="Enter city name"
+          className="border p-2 mr-2"
+        />
+        <button onClick={handleSearch} className="bg-blue-500 text-white p-2">
+          Search
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      {weather && (
+        <div className="border p-4">
+          <h2 className="text-xl">Weather Information</h2>
+          <p>Temperature: {weather.temperature}</p>
+          <p>Condition: {weather.condition}</p>
+          <p>Humidity: {weather.humidity}</p>
+          <p>Wind Speed: {weather.windSpeed}</p>
+        </div>
+      )}
+    </div>
   )
 }
 

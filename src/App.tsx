@@ -4,16 +4,38 @@ import './App.css'
 function App() {
   const [city, setCity] = useState('')
   const [weather, setWeather] = useState(null)
+  const [error, setError] = useState('')
+
+  const fetchWeatherData = async (city) => {
+    try {
+      const apiKey = process.env.REACT_APP_OPENWEATHER_API_KEY
+      const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
+      )
+      if (!response.ok) {
+        throw new Error('Failed to fetch weather data')
+      }
+      const data = await response.json()
+      setWeather({
+        temperature: `${data.main.temp}°C`,
+        condition: data.weather[0].description,
+        humidity: `${data.main.humidity}%`,
+        windSpeed: `${data.wind.speed} km/h`
+      })
+      setError('')
+    } catch (error) {
+      setError('Failed to fetch weather data. Please try again.')
+      setWeather(null)
+    }
+  }
 
   const handleSearch = () => {
-    // Fetch weather data from API
-    // This is a placeholder, replace with actual API call
-    setWeather({
-      temperature: '25°C',
-      condition: 'Sunny',
-      humidity: '60%',
-      windSpeed: '10 km/h'
-    })
+    if (city.trim() !== '') {
+      fetchWeatherData(city)
+    } else {
+      setError('Please enter a city name.')
+      setWeather(null)
+    }
   }
 
   return (
@@ -33,6 +55,7 @@ function App() {
           Search
         </button>
       </div>
+      {error && <p className="text-red-500">{error}</p>}
       {weather && (
         <div className="border p-4">
           <h2 className="text-xl">Weather Information</h2>
